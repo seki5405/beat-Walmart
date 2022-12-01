@@ -1,0 +1,31 @@
+# Producer
+kafka-console-producer.sh \
+--broker-list sw-kafka-0.sw-kafka-headless.kafka-ns.svc.cluster.local:9092 \
+--topic market-kafka-test
+
+kafka-console-producer.sh \
+--broker-list sw-kafka.kafka-ns.svc.cluster.local:9092 \
+--topic market-kafka-test
+
+# Consumer
+kafka-console-consumer.sh \
+--bootstrap-server sw-kafka.kafka-ns.svc.cluster.local:9092 \
+--topic market-kafka-test \
+--from-beginning
+
+# Get a shell from kafka-client
+
+
+
+# Create topic
+kafka-topics.sh --create --topic market-kafka-test --bootstrap-server sw-kafka.kafka-ns.svc.cluster.local:9092
+
+# Check out existing topic
+kafka-topics.sh --list --bootstrap-server sw-kafka.kafka-ns.svc.cluster.local:9092
+
+
+# Create deployment
+kubectl create deploy http-go --image=seki5405/http_go
+
+# Delete deployment
+kubectl delete deployment http-go
