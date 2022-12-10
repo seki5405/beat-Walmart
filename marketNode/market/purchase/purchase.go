@@ -2,35 +2,51 @@ package purchase
 
 import (
 	"cuboulder/csci5253/project/marketnode/market"
-	"strconv"
+	"encoding/json"
+	"math/rand"
 )
 
 type PurchaseTicket struct {
-	city    string
-	state   string
-	counter int
-	product int
+	City      string
+	State     string
+	Counter   int
+	Cart      map[int]int
+	Inventory map[int]int
 }
 
-func NewPurchaseTicket(m market.Market, counter int, product int) PurchaseTicket {
+func NewPurchaseTicket(mk market.Market, counter int) PurchaseTicket {
 	purchaseTicket := PurchaseTicket{
-		city:    m.GetCity(),
-		state:   m.GetState(),
-		counter: counter,
-		product: product,
+		City:      mk.GetCity(),
+		State:     mk.GetState(),
+		Counter:   counter,
+		Cart:      map[int]int{},
+		Inventory: mk.GetInventory(),
 	}
 	return purchaseTicket
 }
 
 func (p *PurchaseTicket) GetPurchaseTicket() PurchaseTicket {
 	return PurchaseTicket{
-		city:    p.city,
-		state:   p.state,
-		counter: p.counter,
-		product: p.product,
+		City:      p.City,
+		State:     p.State,
+		Counter:   p.Counter,
+		Cart:      p.Cart,
+		Inventory: p.Inventory,
+	}
+}
+
+func (p *PurchaseTicket) PutProductsInCart(numOfProduct, bias, maxBuying int) {
+	for i := 0; i < numOfProduct; i++ {
+		if i == bias {
+			p.Cart[i] = rand.Intn(maxBuying) + (maxBuying / 2)
+		} else {
+			p.Cart[i] = rand.Intn(maxBuying)
+		}
 	}
 }
 
 func (p *PurchaseTicket) KafkaMessagePurchaseTicketInfo() string {
-	return p.city + "," + p.state + "," + strconv.Itoa(p.counter) + "," + strconv.Itoa(p.product)
+	jsonCartBytes, _ := json.Marshal(p)
+	jsonCartString := string(jsonCartBytes)
+	return jsonCartString
 }

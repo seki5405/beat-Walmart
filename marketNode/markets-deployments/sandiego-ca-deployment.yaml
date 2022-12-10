@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sandiego-ca-deployment
+spec:
+  selector:
+    matchLabels:
+      app: marketnode
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: marketnode
+    spec:
+      containers:
+      - name: marketnode
+        image: seki5405/csci5253-project-marketnode:latest
+        ports:
+        - containerPort: 9092
+        env:
+        - name: KAFKA_BROKER
+          value: "sw-kafka.kafka-ns.svc.cluster.local:9092"
+        - name: CITY
+          value: "San Diego"
+        - name: STATE
+          value: "CA"
+        - name: BIAS
+          value: "3"
+        - name: MAX_BUYING
+          value: "7"
+        - name: DEFAULT_INVENTORY
+          value: "10000"

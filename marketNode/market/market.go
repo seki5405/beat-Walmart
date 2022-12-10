@@ -1,9 +1,13 @@
 package market
 
+import "fmt"
+
 type Market struct {
 	city  string
 	state string
 	open  bool
+	// inventory is a map of productID to inventory
+	inventory map[int]int
 }
 
 func (m *Market) GetCity() string {
@@ -38,11 +42,16 @@ func (m *Market) GetMarket() Market {
 	}
 }
 
-func NewMarket(city string, state string, open bool) Market {
+func NewMarket(city string, state string, open bool, numOfProduct, defaultInventory int) Market {
+	inventory := make(map[int]int)
+	for i := 0; i < numOfProduct; i++ {
+		inventory[i] = defaultInventory
+	}
 	market := Market{
-		city:  city,
-		state: state,
-		open:  open,
+		city:      city,
+		state:     state,
+		open:      open,
+		inventory: inventory,
 	}
 	return market
 }
@@ -51,6 +60,21 @@ func (m *Market) SetMarket(city string, state string, open bool) {
 	m.city = city
 	m.state = state
 	m.open = open
+}
+
+func (m *Market) GetInventory() map[int]int {
+	return m.inventory
+}
+
+func (m *Market) PullProductFromInventory(cart map[int]int) {
+	for productID, quantity := range cart {
+		if m.inventory[productID] >= quantity {
+			m.inventory[productID] -= quantity
+		} else {
+			m.inventory[productID] = 0
+			fmt.Println("Out of Stock productID: ", productID)
+		}
+	}
 }
 
 func (m *Market) KafkaMessageMarketInfo() string {

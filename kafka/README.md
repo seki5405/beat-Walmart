@@ -8,7 +8,8 @@ This is the node that will be used to run the Kafka cluster. It will be used to 
 ## How to deploy sample client (It could be used as a producer or consumer)
 `./sample-kafka-client.sh`
 
-## Sample commands to use on client container are explained in `sample-commands.txt`
+## Sample commands to use on client container are explained in 
+`sample-commands.txt`
 
 ## Workflow
 #### 1. Deploy Kafka and Zookeeper

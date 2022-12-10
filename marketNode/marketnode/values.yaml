@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: seki5405/csci5253-project-marketnode # nginx
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "latest" # ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -80,3 +80,11 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# ENV variables
+env:
+  CITY: "Seattle"
+  STATE: "WA"
+  BIAS: "-1"
+  MAX_BUYING: "5"
+  DEFAULT_INVENTORY: "10000"
