@@ -1,3 +1,5 @@
 memo
 Screen Shot*
 rest/
+node_modules
+__pycache__
