@@ -8,7 +8,7 @@ Steps to execute the job on the spark cluster:
 2. Submit ```job.py``` to the cluster for processing:
    1. First open up a bash shell on the master node using:
    ```kubectl exec -n spark-ns -it pod/my-release-spark-master-0 -- bash```
-   2. Install the the ```py4j``` package for python using ```pip install py4j```
+   2. Install the the ```py4j``` and ```confluent-kafka``` package for python using ```pip install py4j confluent-kafka```
    3. Copy the job script into master node using:
    ```kubectl cp --namespace spark-ns job.py my-release-spark-master-0:/opt/bitnami/spark/job.py```
    Note that this needs to be done everytime the job script changes. We could just make changes in the container directly but that requires installing nano/vi/vim which isn't possible because the default bash shell given has no user hence, ```apt install``` doesn't work.

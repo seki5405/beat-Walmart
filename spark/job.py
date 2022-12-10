@@ -1,51 +1,62 @@
 from pyspark.sql import SparkSession
-from kafka import KafkaProducer, KafkaConsumer
-import time
+from confluent_kafka import Consumer, Producer
+import json
 
-prod = KafkaProducer(bootstrap_servers="sw-kafka.kafka-ns.svc.cluster.local:9092")
-consumer = KafkaConsumer("market-kafka-test", bootstrap_servers="sw-kafka.kafka-ns.svc.cluster.local:9092")
+def kafka_message_loop(spark_session, consumer, producer, WINDOW, SCHEMA, THRESHOLD):
+    while True:
+        print(f"Reading {WINDOW} messages ...")
 
-with open("kafka_output.txt", "w") as outfile:
-    counter = 0
-    for msg in consumer:
-        msg = [str(x) for x in msg]
-        outfile.write(",".join(msg) + "\n")
-        counter += 1
+        msg_array = consumer.consume(WINDOW)
+        data_array = [json.loads(x.value().decode("utf-8")) for x in msg_array]
 
-        if counter == 10:
-            break
+        rdd_data = []
 
-prod.send("logs", b"starting workers ...")
-print("Hello 1")
+        for data in data_array:
+            current_city = data["City"]
+            current_state = data["State"]
 
-spark = SparkSession \
+            for product in data["Cart"]:
+                rdd_data.append((current_city, current_state, int(product), int(data["Cart"][product]), int(data["Inventory"][product])))
+
+        df = spark_session.createDataFrame(rdd_data, SCHEMA)
+
+        df = df.filter(df["PRODUCT"] != 0)
+        df = df.groupBy(["CITY", "STATE", "PRODUCT"]).min("INVENTORY")
+        df = df.filter(df["min(INVENTORY)"] <= THRESHOLD).select("CITY", "STATE", "PRODUCT")
+        notifications = df.collect()
+
+        print("Showing output ...")
+        df.show()
+
+        for notification in notifications:
+            producer.produce("notifications", key="Key-B", value=",".join([str(x) for x in notification]))
+
+        producer.flush()
+        
+
+def main():
+    # Set up the configuration for the message queue using KAFKA
+    CONF = {
+        "bootstrap.servers": "sw-kafka.kafka-ns.svc.cluster.local:9092", 
+        "group.id": "pyspark"
+    }
+    
+    WINDOW = 50
+    SCHEMA = ["City", "STATE", "PRODUCT", "SALE", "INVENTORY"]
+    THRESHOLD = 9900
+
+    spark = SparkSession \
     .builder \
     .appName("test") \
     .master("spark://my-release-spark-master-svc:7077") \
     .getOrCreate()
 
-df = spark \
-    .readStream \
-    .format("kafka") \
-    .option("kafka.bootstrap.servers", "sw-kafka.kafka-ns.svc.cluster.local:9092") \
-    .option("subscribe", "market-kafka-test") \
-    .option("includeHeaders", "true") \
-    .option("startingOffsets", "latest") \
-    .option("spark.streaming.kafka.maxRatePerPartition", "10") \
-    .load()
- 
-var = df.writeStream.trigger(once=True).start(queryName='that_query', outputMode="append", format='memory')
 
-df.show()
-var.stop()
-rows = df.collect()
+    consumer = Consumer(CONF)
+    consumer.subscribe(["market-kafka-test"])
 
-with open("kafka_output_2.txt", "w") as outfile:
-    for row in rows:
-        outwrite = ", ".join([str(x) for x in row])
-        outfile.write(outwrite + "\n")
+    producer = Producer(CONF)
 
-print("Hello here before the logs")
-prod.send("logs", b"ending workers ...")
+    kafka_message_loop(spark, consumer, producer, WINDOW, SCHEMA, THRESHOLD)
 
-print(df)
+main()
