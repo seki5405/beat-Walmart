@@ -1,0 +1,43 @@
+[
+    {
+        "low_product": 1 ,
+        "state": "Alabama",
+        "city": "-"
+    },
+    {
+        "low_product": 2 ,
+        "val": "06" ,
+        "state": "California",
+        "city": "LA"
+    },
+    {
+        "low_product": 2 ,
+        "val": "08",
+        "state": "Colorado",
+        "city": "Boulder"
+    },
+    {
+        "low_product": 3,
+        "val": "12",
+        "state": "Florida",
+        "city": "Miami" 
+    },
+    {
+        "low_product": 4 ,
+        "val": "13",
+        "state": "Georgia",
+        "city": "Atlanta" 
+    },
+    {
+        "low_product": 4 ,
+        "val": "36",
+        "state": "New York",
+        "city": "Manhattan" 
+    },
+    {
+        "low_product": 4 ,
+        "val": "48",
+        "state": "Texas",
+        "city": "Houston" 
+    }
+]
