@@ -407,6 +407,18 @@
   "resolved" "https://registry.npmjs.org/is-number/-/is-number-7.0.0.tgz"
   "version" "7.0.0"
 
+"kafka@^0.2.3":
+  "integrity" "sha512-Qi9J1HgikGlZz4dGzG++sZ3L52JTE+LCWelz3MNmze0KePSeWvZHVtGe981/mD/u+wyLg6INFw3Rgrqyg+orTA=="
+  "resolved" "https://registry.npmjs.org/kafka/-/kafka-0.2.3.tgz"
+  "version" "0.2.3"
+  dependencies:
+    "std" "0.1.36"
+
+"kafkajs@^2.2.3":
+  "integrity" "sha512-JmzIiLHE/TdQ7b4I2B/DNMtfhTh66fmEaEg7gGkyQXBC6f1A7I2jSjeUsVIJfC8d9YcEIURyBjtOEKBO5OHVhg=="
+  "resolved" "https://registry.npmjs.org/kafkajs/-/kafkajs-2.2.3.tgz"
+  "version" "2.2.3"
+
 "media-typer@0.3.0":
   "integrity" "sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ=="
   "resolved" "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
@@ -672,6 +684,11 @@
   "integrity" "sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ=="
   "resolved" "https://registry.npmjs.org/statuses/-/statuses-2.0.1.tgz"
   "version" "2.0.1"
+
+"std@0.1.36":
+  "integrity" "sha512-PZP6srpVKfDgMwgbo+0jOUV0IFAWxHKlyQj3wiZiov8AYbXtoDjhNtFaCLkthOp0T5I6HDFzYvo2mRVtU5HYdg=="
+  "resolved" "https://registry.npmjs.org/std/-/std-0.1.36.tgz"
+  "version" "0.1.36"
 
 "supports-color@^5.5.0":
   "integrity" "sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow=="
