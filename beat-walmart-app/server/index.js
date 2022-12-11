@@ -17,3 +17,7 @@ const io = new Server(server, {
 server.listen(3001, () => {
     console.log("SERVER IS RUNNING ON 3001")
 })
+
+app.get("/", (req, res) => {
+    res.send("Something here")
+})
