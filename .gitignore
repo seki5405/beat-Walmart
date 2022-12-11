@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 memo
 Screen Shot*
 rest/
 node_modules
 __pycache__
+=======
+node_modules
+>>>>>>> 24484bfdf2cd525551f9dade6b8d060818b72083
 package-lock.json
 yarn.lock
 __pycache__
@@ -24,4 +28,8 @@ __pycache__
 
 npm-debug.log*
 yarn-debug.log*
+<<<<<<< HEAD
 yarn-error.log
+=======
+yarn-error.log
+>>>>>>> 24484bfdf2cd525551f9dade6b8d060818b72083
