@@ -13,6 +13,7 @@ import allStates from "./data/allstates.json";
 import data from "./data.json";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
+const url = "http://localhost:30001/poll"
 
 const offsets = {
   VT: [50, -8],
@@ -26,6 +27,68 @@ const offsets = {
   DC: [49, 21]
 };
 
+const state_mapping = {
+  "AL": "Alabama",
+  "AK": "Alaska",
+  "AS": "American Samoa",
+  "AZ": "Arizona",
+  "AR": "Arkansas",
+  "CA": "California",
+  "CO": "Colorado",
+  "CT": "Connecticut",
+  "DE": "Delaware",
+  "DC": "District Of Columbia",
+  "FM": "Federated States Of Micronesia",
+  "FL": "Florida",
+  "GA": "Georgia",
+  "GU": "Guam",
+  "HI": "Hawaii",
+  "ID": "Idaho",
+  "IL": "Illinois",
+  "IN": "Indiana",
+  "IA": "Iowa",
+  "KS": "Kansas",
+  "KY": "Kentucky",
+  "LA": "Louisiana",
+  "ME": "Maine",
+  "MH": "Marshall Islands",
+  "MD": "Maryland",
+  "MA": "Massachusetts",
+  "MI": "Michigan",
+  "MN": "Minnesota",
+  "MS": "Mississippi",
+  "MO": "Missouri",
+  "MT": "Montana",
+  "NE": "Nebraska",
+  "NV": "Nevada",
+  "NH": "New Hampshire",
+  "NJ": "New Jersey",
+  "NM": "New Mexico",
+  "NY": "New York",
+  "NC": "North Carolina",
+  "ND": "North Dakota",
+  "MP": "Northern Mariana Islands",
+  "OH": "Ohio",
+  "OK": "Oklahoma",
+  "OR": "Oregon",
+  "PW": "Palau",
+  "PA": "Pennsylvania",
+  "PR": "Puerto Rico",
+  "RI": "Rhode Island",
+  "SC": "South Carolina",
+  "SD": "South Dakota",
+  "TN": "Tennessee",
+  "TX": "Texas",
+  "UT": "Utah",
+  "VT": "Vermont",
+  "VI": "Virgin Islands",
+  "VA": "Virginia",
+  "WA": "Washington",
+  "WV": "West Virginia",
+  "WI": "Wisconsin",
+  "WY": "Wyoming"
+}
+
 const markers = [
     {
       markerOffset: -30,
@@ -36,6 +99,19 @@ const markers = [
   ];
 
 const MapChart = ({ setTooltipContent }) => {
+  const [data, setData] = React.useState([]);
+  const fetchData = async () => {
+    try {
+      const response = await fetch(url);
+      console.log(response);
+      const data = await response.json();
+      setData(data);
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
     
   return (
     <div data-tip="">
@@ -50,12 +126,27 @@ const MapChart = ({ setTooltipContent }) => {
                 geography={geo}
                 fill="#DDD"
                 onMouseEnter={() => {
-                  const cur = data.find(s => s.state === geo.properties.name);
-                  // console.log(geo, cur)
-                  setTooltipContent(`Item running low : ${cur.low_product} Quantity: ${cur.val}`);
+                  if (data.length == 0) {
+                    fetchData();
+                  }
+                  console.log(geo.properties.name);
+                  
+                  var state_arr = [];
+
+                  for (var i = 0; i < data.length; i++) {
+                    state_arr.push(state_mapping[data[i].state]);
+                  }
+
+                  console.log(state_arr);
+
+                  
+                  const cur = data.find(s => state_mapping[s.state] === geo.properties.name);
+                  console.log(cur)
+                  setTooltipContent(`Item running low : ${cur.low_product}`);
+                  
                   }}
                 onMouseLeave={() => {
-                setTooltipContent("");
+                  setTooltipContent("");
                 }}
                 style={{
                 default: {
